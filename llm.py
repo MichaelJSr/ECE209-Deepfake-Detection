@@ -1,7 +1,10 @@
 import torch
 from transformers import pipeline
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+try:
+    device = torch.device("cuda" if torch.cuda.is_available() else "mps")
+except:
+    device = torch.device("cpu")
 
 model = "meta-llama/Llama-3.2-3B-Instruct"
 
@@ -10,7 +13,7 @@ prompt = [
     {"role": "user", "content": "What's Deep Learning?"},
 ]
 
-generator = pipeline(model=model, device=device, torch_dtype=torch.bfloat16)
+generator = pipeline(model=model, device=device, torch_dtype=torch.bfloat16 if device.type == "cuda" else torch.float32)
 generation = generator(
     prompt,
     do_sample=False,
