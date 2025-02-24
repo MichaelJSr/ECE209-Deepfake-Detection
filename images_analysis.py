@@ -7,10 +7,10 @@ from pathlib import Path
 
 from util import log
 
-REAL_IMAGE_DIR = "train/REAL"
-FAKE_IMAGE_DIR = "train/FAKE"
-REAL_EMBEDDINGS_DIR = "embeddings/REAL"
-FAKE_EMBEDDINGS_DIR = "embeddings/FAKE"
+REAL_IMAGE_DIR = "test/REAL"
+FAKE_IMAGE_DIR = "test/FAKE"
+REAL_EMBEDDINGS_DIR = "embeddings_test/REAL"
+FAKE_EMBEDDINGS_DIR = "embeddings_test/FAKE"
 IMAGE_BATCH_SIZE = 512
 
 

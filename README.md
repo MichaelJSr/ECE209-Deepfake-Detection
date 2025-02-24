@@ -15,11 +15,15 @@ pip install -r requirements.txt
 
 *Note: if you have a Nvidia GPU, you might want to also `pip install -r requirements2.txt` which includes CUDA supported versions of PyTorch*
 
-You should also download and unzip the `embeddings.zip` file to get all of the image embeddings. You can get it from [Google Drive](https://drive.google.com/file/d/16x-q4cTTGDduJSsjgjG45PW1PJmJ_RLj/view?usp=sharing). The organization is as follows:
+You should also download and unzip the `embeddings.zip` file to get all of the image embeddings. You can get it from [Google Drive](https://drive.google.com/file/d/1HBwsjsHBtqj0Ynzq_PKeQiKjKNLwcZA-/view?usp=sharing). The organization is as follows:
 ```
 embeddings/
-    FAKE/ <-- Embeddings for AI generated images
-    REAL/ <-- embeddings for real images
+    embeddings_test/
+        FAKE/ <-- Embeddings for AI generated images
+        REAL/ <-- embeddings for real images
+    embeddings_train/
+        FAKE/
+        REAL/
 ```
 
 Embeddings were generated from images in the [Kaggle CIFAKE dataset](https://www.kaggle.com/datasets/birdy654/cifake-real-and-ai-generated-synthetic-images)
@@ -28,6 +32,7 @@ Embeddings were generated from images in the [Kaggle CIFAKE dataset](https://www
 
 * [Llama Recipes](https://github.com/huggingface/huggingface-llama-recipes)
 * [Potential Dataset](https://www.kaggle.com/datasets/birdy654/cifake-real-and-ai-generated-synthetic-images)
+* [Existing Work](https://arxiv.org/abs/2403.14077)
 
 ## Current Models
 
