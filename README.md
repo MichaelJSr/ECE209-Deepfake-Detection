@@ -13,7 +13,16 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-*Note: I'm not sure it matters, but `requirements.txt` uses PyTorch installed configured for Linux with CUDA 12.6. YMMV with the current requirements.txt. If it doesn't work, try `pip3 install torch torchvision torchaudio` instead.*
+*Note: if you have a Nvidia GPU, you might want to also `pip install -r requirements2.txt` which includes CUDA supported versions of PyTorch*
+
+You should also download and unzip the `embeddings.zip` file to get all of the image embeddings. You can get it from [Google Drive](https://drive.google.com/file/d/16x-q4cTTGDduJSsjgjG45PW1PJmJ_RLj/view?usp=sharing). The organization is as follows:
+```
+embeddings/
+    FAKE/ <-- Embeddings for AI generated images
+    REAL/ <-- embeddings for real images
+```
+
+Embeddings were generated from images in the [Kaggle CIFAKE dataset](https://www.kaggle.com/datasets/birdy654/cifake-real-and-ai-generated-synthetic-images)
 
 ## Maybe Useful links:
 
