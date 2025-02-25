@@ -1,9 +1,12 @@
 import torch
 from transformers import pipeline
 
+from util import log
+
 try:
     device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 except:
+    log("Could not initialize cuda/mps device, defaulting to cpu.")
     device = torch.device("cpu")
 
 model = "meta-llama/Llama-3.2-3B-Instruct"

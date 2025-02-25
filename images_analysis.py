@@ -9,21 +9,34 @@ from util import log
 
 REAL_IMAGE_DIR = "test/REAL"
 FAKE_IMAGE_DIR = "test/FAKE"
-REAL_EMBEDDINGS_DIR = "embeddings_test/REAL"
-FAKE_EMBEDDINGS_DIR = "embeddings_test/FAKE"
+REAL_EMBEDDINGS_DIR = "embeddings/embeddings_test/REAL"
+FAKE_EMBEDDINGS_DIR = "embeddings/embeddings_test/FAKE"
 IMAGE_BATCH_SIZE = 512
 
 
-def init_models():
+def init_models() -> tuple[ViTImageProcessor, ViTModel, torch.device]:
+    """
+    Initialize the ViT models for generating embeddings.
+
+    Returns:
+        processor (ViTImageProcessor): google/vit-base-patch16-224-in21k.
+        model (ViTModel): google/vit-base-patch16-224-in21k.
+        device (torch.device): Either cuda/mps, or cpu if neither of those are available.
+    """
     processor = ViTImageProcessor.from_pretrained("google/vit-base-patch16-224-in21k")
     model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    try:
+        device = torch.device("cuda" if torch.cuda.is_available() else "mps")
+    except:
+        log("Could not initialize cuda/mps device, defaulting to cpu.")
+        device = torch.device("cpu")
+
     log(f"Using device: {device}")
     return processor, model, device
 
 
-def load_images():
+def load_images() -> tuple[list[tuple[Path, Image.Image]], list[tuple[Path, Image.Image]]]:
     """
     Load all images from 'train/REAL' and 'train/FAKE' directories,
     skipping those that already have corresponding embeddings.
@@ -38,7 +51,7 @@ def load_images():
     real_embeddings_dir = Path(REAL_EMBEDDINGS_DIR)
     fake_embeddings_dir = Path(FAKE_EMBEDDINGS_DIR)
 
-    def _load_helper(dir, embeddings_dir):
+    def _load_helper(dir, embeddings_dir) -> list[tuple[Path, Image.Image]]:
         images = []
         for img_path in dir.glob("*"):
             if img_path.is_file():
@@ -59,7 +72,7 @@ def load_images():
 
 def generate_embeddings(
     img: Image, processor: ViTImageProcessor, model: ViTModel, device: torch.device
-):
+) -> np.ndarray:
     """
     Generate an embedding for a given image using the ViT model.
 
@@ -86,7 +99,7 @@ def generate_embeddings(
     return embedding
 
 
-def save_embedding(embedding, output_dir, filename):
+def save_embedding(embedding: np.ndarray, output_dir: str, filename: str):
     """
     Save an individual embedding to a .npy file.
 
@@ -97,6 +110,16 @@ def save_embedding(embedding, output_dir, filename):
     """
     output_path = Path(output_dir) / f"{filename}.npy"
     np.save(output_path, embedding)
+
+
+def load_embedding(embed_path: str) -> np.ndarray:
+    """
+    Load an individual embedding into a numpy array.
+
+    Args:
+        embed_path (Path): The full directory + filename path to load the embedding from.
+    """
+    return np.load(Path(embed_path))
 
 
 def process_images(images, processor, model, output_dir, label, device):
