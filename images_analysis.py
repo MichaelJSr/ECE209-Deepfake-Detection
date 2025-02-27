@@ -19,9 +19,9 @@ def init_models() -> tuple[ViTImageProcessor, ViTModel, torch.device]:
     Initialize the ViT models for generating embeddings.
 
     Returns:
-        processor (ViTImageProcessor): google/vit-base-patch16-224-in21k.
-        model (ViTModel): google/vit-base-patch16-224-in21k.
-        device (torch.device): Either cuda/mps, or cpu if neither of those are available.
+        :processor (ViTImageProcessor): google/vit-base-patch16-224-in21k.
+        :model (ViTModel): google/vit-base-patch16-224-in21k.
+        :device (torch.device): Either cuda/mps, or cpu if neither of those are available.
     """
     processor = ViTImageProcessor.from_pretrained("google/vit-base-patch16-224-in21k")
     model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
@@ -42,8 +42,8 @@ def load_images() -> tuple[list[tuple[Path, Image.Image]], list[tuple[Path, Imag
     skipping those that already have corresponding embeddings.
 
     Returns:
-        real_images (list): List of tuples (image path, PIL Image) for real images.
-        fake_images (list): List of tuples (image path, PIL Image) for fake images.
+        :real_images (list): List of tuples (image path, PIL Image) for real images.
+        :fake_images (list): List of tuples (image path, PIL Image) for fake images.
     """
     real_dir = Path(REAL_IMAGE_DIR)
     fake_dir = Path(FAKE_IMAGE_DIR)
@@ -77,13 +77,13 @@ def generate_embeddings(
     Generate an embedding for a given image using the ViT model.
 
     Args:
-        img (PIL.Image): The input image.
-        processor (ViTImageProcessor): Image processor for ViT.
-        model (ViTModel): ViT model.
-        device (torch.Device): the device (GPU or CPU) to run the model on.
+        :img (PIL.Image): The input image.
+        :processor (ViTImageProcessor): Image processor for ViT.
+        :model (ViTModel): ViT model.
+        :device (torch.Device): the device (GPU or CPU) to run the model on.
 
     Returns:
-        numpy.ndarray: The extracted embedding as a 1D NumPy array.
+        :numpy.ndarray: The extracted embedding as a 1D NumPy array.
     """
     inputs = processor(images=img, return_tensors="pt").to(device)
     model.to(device)
@@ -104,9 +104,9 @@ def save_embedding(embedding: np.ndarray, output_dir: str, filename: str):
     Save an individual embedding to a .npy file.
 
     Args:
-        embedding (numpy.ndarray): The embedding vector.
-        output_dir (Path): The directory to save the embedding.
-        filename (str): The filename (without extension) to use for saving.
+        :embedding (numpy.ndarray): The embedding vector.
+        :output_dir (Path): The directory to save the embedding.
+        :filename (str): The filename (without extension) to use for saving.
     """
     output_path = Path(output_dir) / f"{filename}.npy"
     np.save(output_path, embedding)
@@ -117,12 +117,39 @@ def load_embedding(embed_path: str) -> np.ndarray:
     Load an individual embedding into a numpy array.
 
     Args:
-        embed_path (Path): The full directory + filename path to load the embedding from.
+        :embed_path (Path): The full directory + filename path to load the embedding from.
+
+    Returns:
+        :numpy.ndarray: The extracted embedding as a 1D NumPy array.
     """
     return np.load(Path(embed_path))
 
 
-def process_images(images, processor, model, output_dir, label, device):
+def convert_embedding_to_str(embedding: np.ndarray) -> str:
+    """
+    Convert a numpy array into its string representation.
+
+    Args:
+        :embedding (np.ndarray): A numpy array to convert to a string.
+
+    Returns:
+        :str: The embedding as a string.
+    """
+    return np.array_str(embedding)
+
+
+def process_images(images: tuple[tuple[Path, Image.Image]], processor: ViTImageProcessor, model: ViTModel, output_dir: str, label: str, device: torch.device):
+    """
+    The engine that generates embeddings from the input images.
+
+    Args:
+        :images: A list of images to generate embeddings of.
+        :processor: The processor to utilize, such as ViTImageProcessor.
+        :model: The model to utilize, such as ViTModel.
+        :output_dir: The directory to output embeddings to.
+        :label: A label such as "real" or "fake" to indicate the type of embedding.
+        :device: The torch device, whether it's cuda, mps, or cpu.
+    """
     log(f"Processing {len(images)} {label.lower()}...")
 
     for img_path, img in tqdm(

@@ -3,7 +3,8 @@ from pathlib import Path
 from images_analysis import (
     FAKE_EMBEDDINGS_DIR,
     REAL_EMBEDDINGS_DIR,
-    load_embedding
+    load_embedding,
+    convert_embedding_to_str
 )
 from util import log
 
@@ -27,6 +28,16 @@ def main():
     log("Fake embeddings loaded.\nLoading real embeddings...")
     real_embeddings = _load_helper(Path(REAL_EMBEDDINGS_DIR), NUM_EMBEDDINGS_TO_ANALYZE)
     log("Real embeddings loaded.")
+
+    fake_embedding_strs = []
+    for fake_embedding in fake_embeddings:
+        fake_embedding_strs.append(convert_embedding_to_str(fake_embedding))
+    del fake_embeddings
+
+    real_embedding_strs = []
+    for real_embedding in real_embeddings:
+        real_embedding_strs.append(convert_embedding_to_str(real_embedding))
+    del real_embeddings
 
 if __name__ == "__main__":
     main()
