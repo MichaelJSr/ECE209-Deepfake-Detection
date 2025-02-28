@@ -124,6 +124,11 @@ def load_embedding(embed_path: str) -> np.ndarray:
     """
     return np.load(Path(embed_path))
 
+def load_embeddings(embed_path: str) -> list[np.ndarray]:
+    """
+    Load all embeddings into a list of numpy arrays.
+    """
+    return [np.load(Path(embed_path)) for embed_path in Path(embed_path).glob("*.npy")]
 
 def convert_embedding_to_str(embedding: np.ndarray) -> str:
     """
