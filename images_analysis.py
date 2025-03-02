@@ -11,7 +11,6 @@ REAL_IMAGE_DIR = "test/REAL"
 FAKE_IMAGE_DIR = "test/FAKE"
 REAL_EMBEDDINGS_DIR = "embeddings/embeddings_test/REAL"
 FAKE_EMBEDDINGS_DIR = "embeddings/embeddings_test/FAKE"
-IMAGE_BATCH_SIZE = 512
 
 
 def init_models() -> tuple[ViTImageProcessor, ViTModel, torch.device]:
@@ -36,7 +35,9 @@ def init_models() -> tuple[ViTImageProcessor, ViTModel, torch.device]:
     return processor, model, device
 
 
-def load_images() -> tuple[list[tuple[Path, Image.Image]], list[tuple[Path, Image.Image]]]:
+def load_images() -> (
+    tuple[list[tuple[Path, Image.Image]], list[tuple[Path, Image.Image]]]
+):
     """
     Load all images from 'train/REAL' and 'train/FAKE' directories,
     skipping those that already have corresponding embeddings.
@@ -124,11 +125,13 @@ def load_embedding(embed_path: str) -> np.ndarray:
     """
     return np.load(Path(embed_path))
 
+
 def load_embeddings(embed_path: str) -> list[np.ndarray]:
     """
     Load all embeddings into a list of numpy arrays.
     """
     return [np.load(Path(embed_path)) for embed_path in Path(embed_path).glob("*.npy")]
+
 
 def convert_embedding_to_str(embedding: np.ndarray) -> str:
     """
@@ -143,7 +146,14 @@ def convert_embedding_to_str(embedding: np.ndarray) -> str:
     return np.array_str(embedding)
 
 
-def process_images(images: tuple[tuple[Path, Image.Image]], processor: ViTImageProcessor, model: ViTModel, output_dir: str, label: str, device: torch.device):
+def process_images(
+    images: tuple[tuple[Path, Image.Image]],
+    processor: ViTImageProcessor,
+    model: ViTModel,
+    output_dir: str,
+    label: str,
+    device: torch.device,
+):
     """
     The engine that generates embeddings from the input images.
 
