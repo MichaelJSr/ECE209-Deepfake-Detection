@@ -8,6 +8,7 @@
 - [x] ask it to classify (maybe a couple times)
 - [x] parse the result (shouldn't be too bad provided LLM follows the format)
 - [x] pray that it's better than 50/50 (it's probably not)
+    - Final Result: Correct: 16, Incorrect: 29, Accuracy: 0.35555555555555557
 
 To get started, make a new Python environment. (Named "ece209as" here, but name it whatever you want):
 

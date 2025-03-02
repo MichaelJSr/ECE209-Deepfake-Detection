@@ -57,26 +57,29 @@ def get_device():
     return device
 
 
-def get_embeddings(real_dir, fake_dir):
+def get_embeddings(real_dir, fake_dir, num_embeddings=NUM_CONTEXT_EMBEDDINGS):
     # labels: real = 1, fake = 0
     log("Loading embeddings...")
     real_embeddings = np.array(load_embeddings(real_dir))
     real_labels = np.ones(len(real_embeddings))
     fake_embeddings = np.array(load_embeddings(fake_dir))
     fake_labels = np.zeros(len(fake_embeddings))
+    log(f"Loaded embeddings from {real_dir} and {fake_dir}.")
 
     all_embeddings = np.vstack((real_embeddings, fake_embeddings))
     all_labels = np.concatenate((real_labels, fake_labels))
 
-    sample_indices = np.random.choice(
-        len(all_embeddings), NUM_CONTEXT_EMBEDDINGS, replace=False
-    )
+    if num_embeddings is not None:
+        sample_indices = np.random.choice(
+            len(all_embeddings), num_embeddings, replace=False
+        )
 
-    log(f"Loaded embeddings from {real_dir} and {fake_dir}.")
-    context_embeddings = all_embeddings[sample_indices]
-    context_labels = all_labels[sample_indices]
+        context_embeddings = all_embeddings[sample_indices]
+        context_labels = all_labels[sample_indices]
 
-    return context_embeddings, context_labels
+        return context_embeddings, context_labels
+    else:
+        return all_embeddings, all_labels
 
 
 def get_context_prompt(context_embeddings, context_labels):
