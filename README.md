@@ -5,9 +5,9 @@
 - [x] load data from the embeddings (it's all saved in npy files) and convert to string
 - [x] shove as much as we can into system prompt (we have way more embeddings than will reasonably fit in the context window, prob a good idea to maybe do a random forest vote type classification provided the LLM doesn't take too long)
 - [x] make embeddings for test set (didn't do this yet..., maybe will try later)
-- [ ] ask it to classify (maybe a couple times)
-- [ ] parse the result (shouldn't be too bad provided LLM follows the format)
-- [ ] pray that it's better than 50/50
+- [x] ask it to classify (maybe a couple times)
+- [x] parse the result (shouldn't be too bad provided LLM follows the format)
+- [x] pray that it's better than 50/50 (it's probably not)
 
 To get started, make a new Python environment. (Named "ece209as" here, but name it whatever you want):
 

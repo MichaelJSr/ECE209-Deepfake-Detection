@@ -8,6 +8,7 @@ from transformers import pipeline
 from images_analysis import load_embeddings
 from util import log
 
+FINAL_PROMPTS_DIR = "prompts"
 REAL_TRAIN_DIR = "embeddings/embeddings_train/REAL"
 FAKE_TRAIN_DIR = "embeddings/embeddings_train/FAKE"
 REAL_TEST_DIR = "embeddings/embeddings_test/REAL"
@@ -38,6 +39,7 @@ TOP_FEATURES = [
     387,
 ]
 NUM_ATTEMPTS = 3
+NUM_TESTS = 1000
 
 SYSTEM_PROMPT = """
 You are a helpful assistant to classify images as real or fake.
@@ -91,7 +93,7 @@ def get_test_prompt(test_embeddings, test_labels):
     # randomly sample 1 test embedding
     test_index = np.random.randint(len(test_embeddings))
     test_embedding = test_embeddings[test_index]
-    test_label = test_labels[test_index]
+    test_label = "real" if test_labels[test_index] == 1 else "fake"
 
     test_prompt = f"x: {[(round(float(test_embedding[i]), EMBEDDING_PRECISION)) for i in TOP_FEATURES]} | y: "
 
@@ -106,12 +108,19 @@ def make_user_prompt(content):
     return {"role": "user", "content": content}
 
 
-def run_test():
-    device = get_device()
+def save_chat_prompt(chat, answer):
+    full_prompt = ""
+    for prompt in chat[:-1]:
+        full_prompt += f"{prompt['content']}\n"
 
-    context_embeddings, context_labels = get_embeddings(REAL_TRAIN_DIR, FAKE_TRAIN_DIR)
+    timestamp = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+    filename = f"{timestamp}_{answer}.txt"
 
-    test_embeddings, test_labels = get_embeddings(REAL_TEST_DIR, FAKE_TEST_DIR)
+    with open(os.path.join(FINAL_PROMPTS_DIR, filename), "w") as f:
+        f.write(full_prompt.strip())
+
+
+def run_test(device, context_embeddings, context_labels, test_embeddings, test_labels):
     test_prompt, test_label = get_test_prompt(test_embeddings, test_labels)
 
     prompt = []
@@ -135,7 +144,7 @@ def run_test():
         prompt.append(make_user_prompt("\n".join(context_prompt)))
 
         generation = generator(
-            prompt, do_sample=False, temperature=1, top_p=1, max_new_tokens=50
+            prompt, do_sample=True, temperature=1, top_p=0.9, max_new_tokens=50
         )
 
         prompt.pop()
@@ -148,14 +157,40 @@ def run_test():
             count_fake += 1
         else:
             log(f"Invalid prediction: {prediction}")
+        log(f"Prediction: {prediction}")
+        save_chat_prompt(chat, test_label)
 
     log(f"Real: {count_real}, Fake: {count_fake}")
     prediction = "real" if count_real > count_fake else "fake"
     if prediction == test_label:
-        log("Correct prediction!")
+        log(f"Correct: predicted {prediction} for {test_label}")
+        return True
     else:
-        log("Incorrect prediction!")
+        log(f"Incorrect: predicted {prediction} for {test_label}")
+        return False
 
 
 if __name__ == "__main__":
-    run_test()
+    device = get_device()
+
+    context_embeddings, context_labels = get_embeddings(REAL_TRAIN_DIR, FAKE_TRAIN_DIR)
+
+    test_embeddings, test_labels = get_embeddings(REAL_TEST_DIR, FAKE_TEST_DIR)
+
+    correct = 0
+    incorrect = 0
+    try:
+        for _ in range(NUM_TESTS):
+            is_correct = run_test(
+                device, context_embeddings, context_labels, test_embeddings, test_labels
+            )
+            if is_correct:
+                correct += 1
+            else:
+                incorrect += 1
+            print(f"Correct: {correct}, Incorrect: {incorrect}")
+    except:
+        pass
+    finally:
+        accuracy = correct / (correct + incorrect)
+        log(f"Correct: {correct}, Incorrect: {incorrect}, Accuracy: {accuracy}")
