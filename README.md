@@ -84,6 +84,24 @@ x: <new image embedding>, y:
 * LLM In-Context Learning
     - Final Result: Correct: 16, Incorrect: 29, Accuracy: 0.35555555555555557
 * DistilBert Encoder-Only Fine Tuning
+```
+{'loss': 0.5475, 'grad_norm': 6.174920082092285, 'learning_rate': 0.0, 'epoch': 500.0}
+{'train_runtime': 16860.6709, 'train_samples_per_second': 47.448, 'train_steps_per_second': 0.208, 'train_loss': 0.5886086750030518, 'epoch': 500.0}
+100%|█████████████████████████████████████| 3500/3500 [4:41:00<00:00,  4.82s/it]
+100%|█████████████████████████████████████████████| 2/2 [00:01<00:00,  1.50it/s]
+[2025-03-07 01:31:08] Results:
+ {'eval_loss': 0.6895899772644043, 'eval_runtime': 2.1466, 'eval_samples_per_second': 186.337, 'eval_steps_per_second': 0.932, 'epoch': 500.0}
+100%|█████████████████████████████████████████████| 2/2 [00:00<00:00,  2.15it/s]
+[2025-03-07 01:31:10] Accuracy: 0.68
+[2025-03-07 01:31:10] Loading embeddings...
+[2025-03-07 01:31:14] Loaded embeddings from embeddings/embeddings_test/REAL and embeddings/embeddings_test/FAKE.
+Map: 100%|███████████████████████████| 400/400 [00:00<00:00, 2103.73 examples/s]
+Map: 100%|█████████████████████████| 1600/1600 [00:00<00:00, 2125.36 examples/s]
+
+100%|█████████████████████████████████████████████| 7/7 [00:06<00:00,  1.16it/s]
+[2025-03-07 01:31:23] Test Accuracy: 0.676875
+```
+
 * CLIP Multimodal Image-Text Pair Prediction
 ```
 [2025-03-06 19:32:22] Starting training for 10 epochs

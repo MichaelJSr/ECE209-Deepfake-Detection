@@ -13,7 +13,7 @@ FAKE_TRAIN_DIR = "embeddings/embeddings_train/FAKE"
 REAL_TEST_DIR = "embeddings/embeddings_test/REAL"
 FAKE_TEST_DIR = "embeddings/embeddings_test/FAKE"
 MODEL = "meta-llama/Llama-3.2-3B-Instruct"
-NUM_CONTEXT_EMBEDDINGS = 8
+NUM_CONTEXT_EMBEDDINGS = 2000
 EMBEDDING_PRECISION = 10  # nums after the decimal (at most 20)
 TOP_FEATURES = [
     448,
