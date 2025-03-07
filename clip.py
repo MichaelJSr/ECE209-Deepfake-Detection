@@ -5,7 +5,6 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 
-import clip
 from transformers import CLIPProcessor, CLIPModel
 
 from images_analysis import FAKE_IMAGE_DIR, REAL_IMAGE_DIR

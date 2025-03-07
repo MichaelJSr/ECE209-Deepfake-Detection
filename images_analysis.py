@@ -133,19 +133,6 @@ def load_embeddings(embed_path: str) -> list[np.ndarray]:
     return [np.load(Path(embed_path)) for embed_path in Path(embed_path).glob("*.npy")]
 
 
-def convert_embedding_to_str(embedding: np.ndarray) -> str:
-    """
-    Convert a numpy array into its string representation.
-
-    Args:
-        :embedding (np.ndarray): A numpy array to convert to a string.
-
-    Returns:
-        :str: The embedding as a string.
-    """
-    return np.array_str(embedding)
-
-
 def process_images(
     images: tuple[tuple[Path, Image.Image]],
     processor: ViTImageProcessor,

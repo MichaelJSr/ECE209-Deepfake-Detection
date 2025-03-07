@@ -1,6 +1,4 @@
 import numpy as np
-import os
-from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
